@@ -7,7 +7,7 @@
   <meta name="description" content="Portfólio de Gustavo Valle de Moraes — Analista de Dados e BI.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <header class="nav">
@@ -16,7 +16,6 @@
       <nav>
         <a href="#sobre">Sobre</a>
         <a href="#projetos">Projetos</a>
-        <a href="#demo">Demo</a>
         <a href="#contato">Contato</a>
       </nav>
     </div>
@@ -29,7 +28,7 @@
       <p class="lead">Sou Gustavo Valle de Moraes, Assistente de Dados & BI. Uso Power BI, DAX, SQL e Python para transformar bases brutas em indicadores claros, dashboards e análises que respondem perguntas reais.</p>
       <div class="hero-cta">
         <a href="#projetos" class="btn btn-gold">Ver projetos</a>
-        <a href="#demo" class="btn btn-ghost">Testar a demo</a>
+        <a href="#contato" class="btn btn-ghost">Falar comigo</a>
       </div>
     </div>
   </section>
@@ -45,7 +44,7 @@
         <h3>Ferramentas</h3>
         <ul class="tags">
           <li>Power BI</li><li>DAX</li><li>Power Query</li><li>SQL Server</li>
-          <li>PostgreSQL</li><li>MySQL</li><li>Python</li><li>FastAPI</li>
+          <li>PostgreSQL</li><li>MySQL</li><li>Python</li>
           <li>ETL</li><li>Modelagem de dados</li><li>Excel Avançado</li>
         </ul>
       </div>
@@ -93,35 +92,6 @@
           <div class="card-links"><a href="https://github.com/Gumoraez/Portif-lio/tree/main/projetos/people-analytics-turnover" target="_blank" rel="noopener">Ver no GitHub</a></div>
           </div>
         </article>
-        <article class="card">
-          <span class="card-tag">Python · FastAPI</span>
-          <h3>API de Análise de Pareto</h3>
-          <p>Uma ferramenta própria para classificar qualquer lista de itens pela regra 80/20.</p>
-          <p><strong>Ação:</strong> API em Python que recebe um CSV, agrupa, ordena e classifica os itens em A, B e C, com o resultado exibido no próprio site.</p>
-          <p><strong>Resultado:</strong> é a demo desta página — você pode testar logo abaixo.</p>
-          <div class="card-links"><a href="#demo">Testar agora</a></div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="demo" class="section">
-    <div class="container">
-      <h2>Demo: Análise de Pareto (ABC) em Python</h2>
-      <p class="muted">Envie um CSV com as colunas <code>produto</code> e <code>valor</code> (por exemplo, faturamento por produto). A API calcula na hora quais itens concentram 80% do valor. <a href="exemplo_abc.csv" download>Baixar CSV de exemplo</a></p>
-      <form id="form-abc" class="upload">
-        <input type="file" id="arquivo" accept=".csv" required>
-        <button class="btn btn-gold" type="submit">Calcular</button>
-      </form>
-      <p id="abc-status" class="status"></p>
-      <div id="abc-resultado" hidden>
-        <div class="kpis" id="kpis"></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Produto</th><th>Valor</th><th>%</th><th>% acum.</th><th>Classe</th></tr></thead>
-            <tbody id="tabela"></tbody>
-          </table>
-        </div>
       </div>
     </div>
   </section>
@@ -129,11 +99,16 @@
   <section id="contato" class="section alt">
     <div class="container narrow">
       <h2>Contato</h2>
-      <form id="form-contato" class="contato">
+      <p class="muted">Tem uma vaga, um projeto ou quer trocar uma ideia? Me mande uma mensagem.</p>
+      <form id="form-contato" class="contato" action="https://formsubmit.co/gustavomoraes021@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Novo contato pelo portfólio">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
         <input name="nome" placeholder="Seu nome" required minlength="2">
         <input name="email" type="email" placeholder="Seu e-mail" required>
         <textarea name="mensagem" rows="5" placeholder="Mensagem" required minlength="5"></textarea>
-        <button class="btn btn-gold" type="submit">Enviar</button>
+        <button class="btn btn-gold" type="submit">Enviar mensagem</button>
       </form>
       <p id="contato-status" class="status"></p>
       <p class="muted links">
@@ -145,6 +120,6 @@
 
   <footer class="footer"><div class="container">© 2026 Gustavo Valle de Moraes</div></footer>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
