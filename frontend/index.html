@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gustavo Valle | Dados & BI</title>
+  <meta name="description" content="Portfólio de Gustavo Valle de Moraes — Analista de Dados e BI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="logo">GV<span>.</span></a>
+      <nav>
+        <a href="#sobre">Sobre</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#demo">Demo</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Dados & Business Intelligence</p>
+      <h1>Transformo dados em <span class="gold">decisões de negócio</span>.</h1>
+      <p class="lead">Sou Gustavo Valle de Moraes, Assistente de Dados & BI. Uso Power BI, DAX, SQL e Python para transformar bases brutas em indicadores claros, dashboards e análises que respondem perguntas reais.</p>
+      <div class="hero-cta">
+        <a href="#projetos" class="btn btn-gold">Ver projetos</a>
+        <a href="#demo" class="btn btn-ghost">Testar a demo</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" class="section">
+    <div class="container grid-2">
+      <div>
+        <h2>Sobre mim</h2>
+        <p>Bacharel em Sistemas de Informação pela Faculdade Impacta (2025). Atuo na OSP Service como Assistente de Dados & BI desde dez/2024, com passagens pela Logic Adapt (estágio em Análise de Dados) e Fast Shop.</p>
+        <p>Gosto de ir do dado bruto até a decisão: entender a pergunta do negócio, tratar e modelar os dados, e entregar uma visualização que qualquer pessoa consiga ler.</p>
+      </div>
+      <div class="stack">
+        <h3>Ferramentas</h3>
+        <ul class="tags">
+          <li>Power BI</li><li>DAX</li><li>Power Query</li><li>SQL Server</li>
+          <li>PostgreSQL</li><li>MySQL</li><li>Python</li><li>FastAPI</li>
+          <li>ETL</li><li>Modelagem de dados</li><li>Excel Avançado</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projetos" class="section alt">
+    <div class="container">
+      <h2>Projetos</h2>
+      <p class="muted">Projetos de estudo com <strong>dados fictícios</strong>, no formato Situação → Ação → Resultado.</p>
+      <div class="cards lista">
+        <article class="card projeto">
+          <a href="img/vendas.png" target="_blank" class="card-img"><img src="img/vendas.png" alt="Dashboard Dashboard de Vendas de Varejo" loading="lazy"></a>
+          <div class="card-body">
+          <span class="card-tag">Power BI · DAX</span>
+          <h3>Dashboard de Vendas de Varejo</h3>
+          <p>Uma rede fictícia com 12 lojas queria entender por que o faturamento caiu no 2º semestre.</p>
+          <p><strong>Ação:</strong> modelo estrela (fato vendas + dimensões loja, produto, calendário) e medidas DAX de ticket médio, variação YoY e meta x realizado.</p>
+          <p><strong>Resultado:</strong> o faturamento caiu 7,3% no 2º semestre e só 3 lojas explicavam toda a queda; nelas, o mix migrou para acessórios e o ticket médio da rede caiu 8,6%.</p>
+          <div class="kpi-row"><span>R$ 82,9 mi</span><span>39,5 mil vendas</span><span>-8,6% ticket</span></div>
+          <div class="card-links"><a href="https://github.com/Gumoraez/Portif-lio/tree/main/projetos/vendas-varejo" target="_blank" rel="noopener">Ver no GitHub</a></div>
+          </div>
+        </article>
+        <article class="card projeto">
+          <a href="img/churn.png" target="_blank" class="card-img"><img src="img/churn.png" alt="Dashboard Análise de Churn de Assinaturas" loading="lazy"></a>
+          <div class="card-body">
+          <span class="card-tag">SQL · PostgreSQL</span>
+          <h3>Análise de Churn de Assinaturas</h3>
+          <p>Um serviço de streaming fictício perdia assinantes sem saber em que momento.</p>
+          <p><strong>Ação:</strong> consultas com CTEs e window functions para montar coortes mensais e medir retenção por plano.</p>
+          <p><strong>Resultado:</strong> 82% dos cancelamentos aconteciam nos primeiros 60 dias, 2 em cada 3 no plano Básico, apontando o onboarding como prioridade.</p>
+          <div class="kpi-row"><span>25 mil clientes</span><span>82% em 60 dias</span><span>4 consultas</span></div>
+          <div class="card-links"><a href="https://github.com/Gumoraez/Portif-lio/tree/main/projetos/churn-assinaturas" target="_blank" rel="noopener">Ver no GitHub</a></div>
+          </div>
+        </article>
+        <article class="card projeto">
+          <a href="img/turnover.png" target="_blank" class="card-img"><img src="img/turnover.png" alt="Dashboard People Analytics: Turnover" loading="lazy"></a>
+          <div class="card-body">
+          <span class="card-tag">Power BI · Power Query</span>
+          <h3>People Analytics: Turnover</h3>
+          <p>Uma empresa fictícia com 800 funcionários queria reduzir a rotatividade.</p>
+          <p><strong>Ação:</strong> ETL em Power Query de bases de RH separadas e dashboard de turnover por área, tempo de casa e faixa salarial.</p>
+          <p><strong>Resultado:</strong> a área de Atendimento tinha turnover de 42%, o dobro da média da empresa, e também a menor faixa salarial.</p>
+          <div class="kpi-row"><span>800 pessoas</span><span>20,5% média</span><span>42% atendimento</span></div>
+          <div class="card-links"><a href="https://github.com/Gumoraez/Portif-lio/tree/main/projetos/people-analytics-turnover" target="_blank" rel="noopener">Ver no GitHub</a></div>
+          </div>
+        </article>
+        <article class="card">
+          <span class="card-tag">Python · FastAPI</span>
+          <h3>API de Análise de Pareto</h3>
+          <p>Uma ferramenta própria para classificar qualquer lista de itens pela regra 80/20.</p>
+          <p><strong>Ação:</strong> API em Python que recebe um CSV, agrupa, ordena e classifica os itens em A, B e C, com o resultado exibido no próprio site.</p>
+          <p><strong>Resultado:</strong> é a demo desta página — você pode testar logo abaixo.</p>
+          <div class="card-links"><a href="#demo">Testar agora</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo" class="section">
+    <div class="container">
+      <h2>Demo: Análise de Pareto (ABC) em Python</h2>
+      <p class="muted">Envie um CSV com as colunas <code>produto</code> e <code>valor</code> (por exemplo, faturamento por produto). A API calcula na hora quais itens concentram 80% do valor. <a href="exemplo_abc.csv" download>Baixar CSV de exemplo</a></p>
+      <form id="form-abc" class="upload">
+        <input type="file" id="arquivo" accept=".csv" required>
+        <button class="btn btn-gold" type="submit">Calcular</button>
+      </form>
+      <p id="abc-status" class="status"></p>
+      <div id="abc-resultado" hidden>
+        <div class="kpis" id="kpis"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Produto</th><th>Valor</th><th>%</th><th>% acum.</th><th>Classe</th></tr></thead>
+            <tbody id="tabela"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="section alt">
+    <div class="container narrow">
+      <h2>Contato</h2>
+      <form id="form-contato" class="contato">
+        <input name="nome" placeholder="Seu nome" required minlength="2">
+        <input name="email" type="email" placeholder="Seu e-mail" required>
+        <textarea name="mensagem" rows="5" placeholder="Mensagem" required minlength="5"></textarea>
+        <button class="btn btn-gold" type="submit">Enviar</button>
+      </form>
+      <p id="contato-status" class="status"></p>
+      <p class="muted links">
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a> ·
+        <a href="https://github.com/Gumoraez" target="_blank" rel="noopener">GitHub</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer"><div class="container">© 2026 Gustavo Valle de Moraes</div></footer>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>

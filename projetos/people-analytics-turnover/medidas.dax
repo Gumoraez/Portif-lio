@@ -1,0 +1,32 @@
+-- Medidas DAX — People Analytics: Turnover
+-- Tabela: funcionarios (id_funcionario, area, data_admissao, salario, data_desligamento)
+
+Headcount = COUNTROWS ( funcionarios )
+
+Desligamentos = CALCULATE ( [Headcount], NOT ISBLANK ( funcionarios[data_desligamento] ) )
+
+Turnover % = DIVIDE ( [Desligamentos], [Headcount] )
+
+Turnover Média Empresa % =
+CALCULATE ( [Turnover %], REMOVEFILTERS ( funcionarios[area] ) )
+
+Turnover vs Média = DIVIDE ( [Turnover %], [Turnover Média Empresa %] )
+
+Salário Médio = AVERAGE ( funcionarios[salario] )
+
+-- Coluna calculada (em funcionarios)
+Tempo de Casa (anos) =
+DATEDIFF (
+    funcionarios[data_admissao],
+    COALESCE ( funcionarios[data_desligamento], DATE ( 2025, 12, 31 ) ),
+    YEAR
+)
+
+-- Coluna calculada
+Faixa Salarial =
+SWITCH ( TRUE (),
+    funcionarios[salario] < 3000, "Até 3 mil",
+    funcionarios[salario] < 6000, "3 a 6 mil",
+    funcionarios[salario] < 9000, "6 a 9 mil",
+    "Acima de 9 mil"
+)
