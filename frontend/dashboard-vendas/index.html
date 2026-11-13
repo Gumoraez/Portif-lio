@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Vendas de Varejo | Gustavo Valle</title>
+<meta name="description" content="Dashboard interativo de vendas de varejo (dados fictícios) — Gustavo Valle de Moraes, Dados & BI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<style>
+  :root{
+    --green:#3fae7a; --green-dark:#23784f; --green-light:#e9f7f0; --green-soft:#cdebdc;
+    --ink:#1d3a2d; --text:#2c3e36; --muted:#64776e; --bg:#f3faf6; --surface:#fcfcfb; --line:#dcebe3;
+    --grid:#e8eeea;
+    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+    --good:#0ca30c; --critical:#d03b3b;
+    --radius:14px; --shadow:0 6px 24px rgba(35,120,79,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  a{color:var(--green-dark)}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px 20px 48px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .back{font-size:.9rem;text-decoration:none;font-weight:600}
+  .back:hover{text-decoration:underline}
+  .lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:#fff;overflow:hidden}
+  .lang button{border:0;background:none;padding:6px 14px;font:600 .82rem Manrope,sans-serif;color:var(--muted);cursor:pointer}
+  .lang button[aria-pressed="true"]{background:var(--green-dark);color:#fff}
+  h1{font-size:clamp(1.4rem,2.6vw,1.9rem);color:var(--ink);font-weight:800;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:.95rem;margin-top:2px}
+  .tag{display:inline-block;background:var(--green-light);color:var(--green-dark);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;margin-top:8px}
+
+  .filters{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;margin:18px 0 16px;box-shadow:var(--shadow)}
+  .filters label{display:flex;flex-direction:column;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;gap:4px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{border:0;background:#fff;padding:7px 14px;font:600 .88rem Manrope,sans-serif;color:var(--text);cursor:pointer;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--green-light);color:var(--green-dark)}
+  select{font:500 .9rem Manrope,sans-serif;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text);min-width:170px}
+  .reset{margin-left:auto;border:0;background:none;color:var(--green-dark);font:600 .85rem Manrope,sans-serif;cursor:pointer;text-decoration:underline}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+  .kpi .lbl{font-size:.78rem;color:var(--muted);font-weight:600}
+  .kpi .val{font-size:1.6rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kpi .note{font-size:.78rem;color:var(--muted)}
+  .up{color:var(--good)} .down{color:var(--critical)}
+
+  .grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+  .panel h2{font-size:1rem;color:var(--ink);font-weight:700}
+  .panel .hint{font-size:.8rem;color:var(--muted);margin-bottom:10px}
+  .chart-box{position:relative;height:280px}
+  .panel.fill{display:flex;flex-direction:column}
+  .panel.fill .chart-box{flex:1;min-height:280px}
+  .chart-box.short{height:170px}
+  .span2{grid-column:1/-1}
+
+  table{width:100%;border-collapse:collapse;font-size:.88rem;font-variant-numeric:tabular-nums}
+  th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;padding:6px 6px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none;white-space:nowrap}
+  th.num,td.num{text-align:right}
+  td{white-space:nowrap;padding:6px 6px;border-bottom:1px solid #f0f4f1}
+  tr.sel td{background:var(--green-light)}
+  tbody tr{cursor:pointer}
+  tbody tr:hover td{background:#f6faf8}
+  .bar{height:10px;background:var(--green-dark);border-radius:0 4px 4px 0;min-width:2px}
+  .barcell{width:34%}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;margin-bottom:6px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+  .insight{background:var(--green-light);border:1px solid var(--green-soft);border-radius:var(--radius);padding:16px 18px;margin-top:16px}
+  .insight h2{font-size:1rem;color:var(--ink);margin-bottom:6px}
+  .insight ul{padding-left:18px;font-size:.92rem}
+  .insight li{margin:3px 0}
+  footer{margin-top:22px;font-size:.8rem;color:var(--muted);text-align:center}
+
+  @media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.reset{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="back" href="../" data-i18n="back">← Voltar ao portfólio</a>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </header>
+  <h1 data-i18n="title">Dashboard de Vendas de Varejo</h1>
+  <p class="sub" data-i18n="subtitle">Rede fictícia de 12 lojas · Jan–Dez 2025 · 39,5 mil vendas</p>
+  <span class="tag" data-i18n="tag">Dados fictícios · Python (pandas) + JavaScript · mesmo modelo do projeto em Power BI</span>
+
+  <section class="filters" aria-label="Filtros">
+    <label><span data-i18n="fPeriod">Período</span>
+      <div class="seg" id="fPeriodo">
+        <button type="button" data-v="0" aria-pressed="true" data-i18n="year">Ano</button>
+        <button type="button" data-v="1" aria-pressed="false" data-i18n="h1">1º sem</button>
+        <button type="button" data-v="2" aria-pressed="false" data-i18n="h2">2º sem</button>
+      </div>
+    </label>
+    <label><span data-i18n="fStore">Loja</span><select id="fLoja"></select></label>
+    <label><span data-i18n="fCat">Categoria</span><select id="fCat"></select></label>
+    <button class="reset" type="button" id="reset" data-i18n="reset">Limpar filtros</button>
+  </section>
+
+  <section class="kpis" aria-label="Indicadores">
+    <div class="kpi"><div class="lbl" data-i18n="kRev">Faturamento</div><div class="val" id="kFat">–</div><div class="note" id="kFatN"></div></div>
+    <div class="kpi"><div class="lbl" data-i18n="kOrders">Vendas</div><div class="val" id="kVen">–</div><div class="note" id="kVenN"></div></div>
+    <div class="kpi"><div class="lbl" data-i18n="kTicket">Ticket médio</div><div class="val" id="kTic">–</div><div class="note" id="kTicN"></div></div>
+    <div class="kpi"><div class="lbl" data-i18n="kVar">Variação 2º vs 1º semestre</div><div class="val" id="kVar">–</div><div class="note" data-i18n="kVarN">faturamento, com os filtros de loja e categoria</div></div>
+  </section>
+
+  <div class="grid">
+    <section class="panel fill">
+      <h2 data-i18n="cMonth">Faturamento mensal</h2>
+      <p class="hint" data-i18n="cMonthH">Passe o mouse nas barras para ver os valores. Meses fora do período ficam esmaecidos.</p>
+      <div class="chart-box"><canvas id="cMes" aria-label="Faturamento mensal" role="img"></canvas></div>
+    </section>
+
+    <section class="panel">
+      <h2 data-i18n="cStore">Ranking de lojas</h2>
+      <p class="hint" data-i18n="cStoreH">Clique numa loja para filtrar o dashboard. Clique nos títulos para ordenar.</p>
+      <table>
+        <thead><tr>
+          <th data-sort="nome" data-i18n="tStore">Loja</th>
+          <th data-sort="v" class="num" data-i18n="tRev">Faturamento</th>
+          <th class="barcell" aria-hidden="true"></th>
+          <th data-sort="var" class="num" data-i18n="tVar">2º vs 1º sem</th>
+        </tr></thead>
+        <tbody id="tLojas"></tbody>
+      </table>
+    </section>
+
+    <section class="panel span2">
+      <h2 data-i18n="cMix">Mix de categorias (% das vendas) — 1º vs 2º semestre</h2>
+      <p class="hint" data-i18n="cMixH">Mostra para onde o mix migrou. Responde ao filtro de loja.</p>
+      <div class="legend" id="legMix"></div>
+      <div class="chart-box short"><canvas id="cMix" aria-label="Mix de categorias por semestre" role="img"></canvas></div>
+    </section>
+  </div>
+
+  <section class="insight">
+    <h2 data-i18n="iTitle">O que os dados mostram</h2>
+    <ul id="insights"></ul>
+  </section>
+
+  <footer>
+    <span data-i18n="foot">Gustavo Valle de Moraes · Dados & BI ·</span>
+    <a href="https://github.com/Gumoraez/Portif-lio/tree/main/projetos/vendas-varejo" target="_blank" rel="noopener" data-i18n="code">dados e medidas DAX no GitHub</a>
+  </footer>
+</div>
+
+<script src="dados.js"></script>
+<script>
+(function(){
+  const D = window.DADOS;
+  const CATS = ['Eletrônicos','Informática','Eletrodomésticos','Acessórios'];
+  const CAT_EN = {'Eletrônicos':'Electronics','Informática':'Computing','Eletrodomésticos':'Appliances','Acessórios':'Accessories'};
+  const CAT_COLOR = {'Eletrônicos':'#2a78d6','Informática':'#eb6834','Eletrodomésticos':'#1baf7a','Acessórios':'#eda100'};
+  const MES = {pt:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']};
+
+  const T = {
+    pt:{back:'← Voltar ao portfólio',title:'Dashboard de Vendas de Varejo',subtitle:'Rede fictícia de 12 lojas · Jan–Dez 2025 · 39,5 mil vendas',
+      tag:'Dados fictícios · Python (pandas) + JavaScript · mesmo modelo do projeto em Power BI',fPeriod:'Período',year:'Ano',h1:'1º sem',h2:'2º sem',
+      fStore:'Loja',fCat:'Categoria',reset:'Limpar filtros',kRev:'Faturamento',kOrders:'Vendas',kTicket:'Ticket médio',kVar:'Variação 2º vs 1º semestre',
+      kVarN:'faturamento, com os filtros de loja e categoria',cMonth:'Faturamento mensal',cMonthH:'Passe o mouse nas barras para ver os valores. Meses fora do período ficam esmaecidos.',
+      cStore:'Ranking de lojas',cStoreH:'Clique numa loja para filtrar o dashboard. Clique nos títulos para ordenar.',tStore:'Loja',tRev:'Faturamento',tVar:'2º vs 1º sem',
+      cMix:'Mix de categorias (% das vendas) — 1º vs 2º semestre',cMixH:'Mostra para onde o mix migrou. Responde ao filtro de loja.',iTitle:'O que os dados mostram',
+      foot:'Gustavo Valle de Moraes · Dados & BI ·',code:'dados e medidas DAX no GitHub',allStores:'Todas as lojas',allCats:'Todas as categorias',
+      units:'itens vendidos',perOrder:'por venda',orders:'vendas',sem1:'1º semestre',sem2:'2º semestre',rev:'Faturamento',share:'das vendas',up:'alta',down:'queda',
+      ins:[
+        'Faturamento anual de <b>R$ 82,9 mi</b>, com <b>queda de 7,3%</b> do 1º para o 2º semestre.',
+        'O ticket médio caiu <b>8,6%</b> (R$ 2.192 → R$ 2.003): vendeu-se quase o mesmo número de vezes, mas itens mais baratos.',
+        '<b>Rio de Janeiro, Florianópolis e Recife</b> concentram toda a queda; as outras 9 lojas cresceram levemente.',
+        'Causa: nessas lojas o mix migrou para <b>Acessórios</b>, de baixo valor. Selecione uma delas no ranking e veja o gráfico de mix.'
+      ]},
+    en:{back:'← Back to portfolio',title:'Retail Sales Dashboard',subtitle:'Fictional chain of 12 stores · Jan–Dec 2025 · 39.5k sales',
+      tag:'Fictional data · Python (pandas) + JavaScript · same model as the Power BI project',fPeriod:'Period',year:'Year',h1:'H1',h2:'H2',
+      fStore:'Store',fCat:'Category',reset:'Clear filters',kRev:'Revenue',kOrders:'Sales',kTicket:'Average ticket',kVar:'H2 vs H1 change',
+      kVarN:'revenue, using store and category filters',cMonth:'Monthly revenue',cMonthH:'Hover over the bars to see values. Months outside the period are dimmed.',
+      cStore:'Store ranking',cStoreH:'Click a store to filter the dashboard. Click headers to sort.',tStore:'Store',tRev:'Revenue',tVar:'H2 vs H1',
+      cMix:'Category mix (% of sales) — H1 vs H2',cMixH:'Shows where the mix shifted. Responds to the store filter.',iTitle:'Key findings',
+      foot:'Gustavo Valle de Moraes · Data & BI ·',code:'data and DAX measures on GitHub',allStores:'All stores',allCats:'All categories',
+      units:'units sold',perOrder:'per sale',orders:'sales',sem1:'H1',sem2:'H2',rev:'Revenue',share:'of sales',up:'up',down:'down',
+      ins:[
+        'Annual revenue of <b>R$ 82.9M</b>, <b>down 7.3%</b> from H1 to H2.',
+        'Average ticket fell <b>8.6%</b> (R$ 2,192 → R$ 2,003): roughly the same number of sales, but cheaper items.',
+        '<b>Rio de Janeiro, Florianópolis and Recife</b> account for the entire drop; the other 9 stores grew slightly.',
+        'Root cause: in those stores the mix shifted to low-value <b>Accessories</b>. Pick one in the ranking and check the mix chart.'
+      ]}
+  };
+
+  const st = { lang:'pt', per:0, loja:0, cat:'', sort:'v', dir:-1 };
+  try { const saved = localStorage.getItem('dash-lang'); if (saved==='en') st.lang='en'; } catch(e){}
+
+  const loc = () => st.lang==='pt' ? 'pt-BR' : 'en-IE';
+  const brl = (v, compact) => (compact && v===0) ? 'R$ 0' : compact
+    ? 'R$ ' + (v>=1e6 ? (v/1e6).toLocaleString(loc(),{maximumFractionDigits:1}) + (st.lang==='pt'?' mi':'M')
+                      : (v/1e3).toLocaleString(loc(),{maximumFractionDigits:0}) + (st.lang==='pt'?' mil':'k'))
+    : v.toLocaleString(loc(),{style:'currency',currency:'BRL',maximumFractionDigits:0});
+  const int = v => v.toLocaleString(loc());
+  const pct = v => (v>0?'+':'') + (v*100).toLocaleString(loc(),{minimumFractionDigits:1,maximumFractionDigits:1}) + '%';
+  const catName = c => st.lang==='pt' ? c : CAT_EN[c];
+
+  // rows: [mes, loja, produto, valor, nVendas, qtd]
+  const R = D.rows.map(r => ({m:r[0], l:r[1], c:D.produtos[r[2]][1], v:r[3], n:r[4], q:r[5]}));
+  const inPer = m => st.per===0 || (st.per===1 ? m<=6 : m>6);
+  const sum = (rows,k) => rows.reduce((a,r)=>a+r[k],0);
+
+  // ---------- filters ----------
+  const fLoja = document.getElementById('fLoja'), fCat = document.getElementById('fCat');
+  function fillSelects(){
+    const t = T[st.lang];
+    fLoja.innerHTML = `<option value="0">${t.allStores}</option>` + Object.entries(D.lojas).sort((a,b)=>a[1].localeCompare(b[1])).map(([id,n])=>`<option value="${id}">${n}</option>`).join('');
+    fCat.innerHTML = `<option value="">${t.allCats}</option>` + CATS.map(c=>`<option value="${c}">${catName(c)}</option>`).join('');
+    fLoja.value = st.loja; fCat.value = st.cat;
+  }
+  fLoja.onchange = () => { st.loja = +fLoja.value; render(); };
+  fCat.onchange = () => { st.cat = fCat.value; render(); };
+  document.querySelectorAll('#fPeriodo button').forEach(b => b.onclick = () => {
+    st.per = +b.dataset.v;
+    document.querySelectorAll('#fPeriodo button').forEach(x => x.setAttribute('aria-pressed', x===b));
+    render();
+  });
+  document.getElementById('reset').onclick = () => {
+    st.per=0; st.loja=0; st.cat='';
+    document.querySelectorAll('#fPeriodo button').forEach(x => x.setAttribute('aria-pressed', x.dataset.v==='0'));
+    fLoja.value=0; fCat.value=''; render();
+  };
+  document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
+    st.lang = b.dataset.lang; try{localStorage.setItem('dash-lang',st.lang);}catch(e){}
+    applyLang(); render();
+  });
+  document.querySelectorAll('th[data-sort]').forEach(th => th.onclick = () => {
+    const k = th.dataset.sort; st.dir = (st.sort===k) ? -st.dir : (k==='nome'?1:-1); st.sort = k; renderTable();
+  });
+
+  function applyLang(){
+    const t = T[st.lang];
+    document.documentElement.lang = st.lang==='pt'?'pt-BR':'en';
+    document.title = t.title + ' | Gustavo Valle';
+    document.querySelectorAll('[data-i18n]').forEach(el => { if (t[el.dataset.i18n]) el.textContent = t[el.dataset.i18n]; });
+    document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang===st.lang));
+    document.getElementById('insights').innerHTML = t.ins.map(s=>`<li>${s}</li>`).join('');
+    fillSelects();
+  }
+
+  // ---------- charts ----------
+  Chart.defaults.font.family = 'Manrope, system-ui, sans-serif';
+  Chart.defaults.color = '#64776e';
+  const tooltip = { backgroundColor:'#1d3a2d', padding:10, cornerRadius:8, titleFont:{weight:'700'}, displayColors:false };
+
+  const cMes = new Chart(document.getElementById('cMes'), {
+    type:'bar',
+    data:{ labels:[], datasets:[{ data:[], backgroundColor:[], borderRadius:{topLeft:4,topRight:4}, borderSkipped:'start', maxBarThickness:34, categoryPercentage:.85, barPercentage:.9 }]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{ legend:{display:false}, tooltip:{...tooltip, callbacks:{ label: c => brl(c.parsed.y) + '  ·  ' + int(c.dataset.n[c.dataIndex]) + ' ' + T[st.lang].orders } } },
+      scales:{ x:{ grid:{display:false}, border:{color:'#cfd9d3'} },
+               y:{ beginAtZero:true, grid:{color:'#e8eeea'}, border:{display:false}, ticks:{ callback:v => brl(v,true), maxTicksLimit:5 } } } }
+  });
+
+  const mixLabels = { id:'mixLabels', afterDatasetsDraw(chart){
+    const {ctx} = chart; ctx.save(); ctx.font = '700 12px Manrope, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    chart.data.datasets.forEach((ds,i) => chart.getDatasetMeta(i).data.forEach((bar,j) => {
+      const v = ds.data[j], w = Math.abs(bar.x - bar.base);
+      if (v < 6 || w < 40) return;
+      ctx.fillStyle = '#0b0b0b';
+      ctx.fillText(v.toLocaleString(loc(),{maximumFractionDigits:1})+'%', (bar.x+bar.base)/2, bar.y);
+    }));
+    ctx.restore();
+  }};
+  const cMix = new Chart(document.getElementById('cMix'), {
+    type:'bar', plugins:[mixLabels],
+    data:{ labels:[], datasets: CATS.map(c => ({ label:c, data:[], backgroundColor:CAT_COLOR[c], borderColor:'#fff', borderWidth:{left:0,right:2,top:0,bottom:0}, borderSkipped:false, borderRadius:0, barThickness:38 })) },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{ legend:{display:false}, tooltip:{...tooltip, displayColors:true, callbacks:{ label: c => ' ' + catName(CATS[c.datasetIndex]) + ': ' + c.parsed.x.toLocaleString(loc(),{maximumFractionDigits:1}) + '% ' + T[st.lang].share } } },
+      scales:{ x:{ stacked:true, max:100, grid:{color:'#e8eeea'}, border:{display:false}, ticks:{callback:v=>v+'%'} },
+               y:{ stacked:true, grid:{display:false}, border:{display:false}, ticks:{font:{weight:'700'}, color:'#2c3e36'} } } }
+  });
+
+  // ---------- render ----------
+  function render(){
+    const t = T[st.lang];
+    const base = R.filter(r => (!st.loja || r.l===st.loja) && (!st.cat || r.c===st.cat));
+    const cur = base.filter(r => inPer(r.m));
+
+    // KPIs
+    const fat = sum(cur,'v'), n = sum(cur,'n'), q = sum(cur,'q');
+    document.getElementById('kFat').textContent = brl(fat,true);
+    document.getElementById('kFatN').textContent = brl(fat);
+    document.getElementById('kVen').textContent = int(n);
+    document.getElementById('kVenN').textContent = int(q) + ' ' + t.units;
+    document.getElementById('kTic').textContent = n ? brl(fat/n) : '–';
+    document.getElementById('kTicN').textContent = t.perOrder;
+    const s1 = sum(base.filter(r=>r.m<=6),'v'), s2 = sum(base.filter(r=>r.m>6),'v');
+    const v = s1 ? (s2-s1)/s1 : 0, kVar = document.getElementById('kVar');
+    kVar.innerHTML = s1 ? `<span class="${v<0?'down':'up'}" aria-label="${v<0?t.down:t.up}">${v<0?'▼':'▲'}</span> ${pct(v)}` : '–';
+
+    // monthly
+    const byM = Array.from({length:12},(_,i)=>({v:0,n:0}));
+    base.forEach(r => { byM[r.m-1].v += r.v; byM[r.m-1].n += r.n; });
+    cMes.data.labels = MES[st.lang];
+    cMes.data.datasets[0].data = byM.map(x=>x.v);
+    cMes.data.datasets[0].n = byM.map(x=>x.n);
+    cMes.data.datasets[0].backgroundColor = byM.map((_,i)=> inPer(i+1) ? '#23784f' : '#cdebdc');
+    cMes.update();
+
+    // mix (store filter only)
+    const mixBase = R.filter(r => !st.loja || r.l===st.loja);
+    const share = sem => { const rows = mixBase.filter(r => sem===1 ? r.m<=6 : r.m>6); const tot = sum(rows,'n');
+      return CATS.map(c => tot ? sum(rows.filter(r=>r.c===c),'n')/tot*100 : 0); };
+    const sh = [share(1), share(2)];
+    cMix.data.labels = [t.sem1, t.sem2];
+    cMix.data.datasets.forEach((ds,i) => { ds.data = [sh[0][i], sh[1][i]]; ds.label = catName(CATS[i]); });
+    cMix.update();
+    document.getElementById('legMix').innerHTML = CATS.map(c => `<span><i style="background:${CAT_COLOR[c]}"></i>${catName(c)}</span>`).join('');
+
+    renderTable();
+  }
+
+  function renderTable(){
+    const t = T[st.lang];
+    const rows = R.filter(r => !st.cat || r.c===st.cat);
+    const lojas = Object.entries(D.lojas).map(([id,nome]) => {
+      const lr = rows.filter(r => r.l===+id);
+      const s1 = sum(lr.filter(r=>r.m<=6),'v'), s2 = sum(lr.filter(r=>r.m>6),'v');
+      return { id:+id, nome, v:sum(lr.filter(r=>inPer(r.m)),'v'), var: s1 ? (s2-s1)/s1 : 0 };
+    });
+    lojas.sort((a,b) => st.sort==='nome' ? st.dir*a.nome.localeCompare(b.nome) : st.dir*(a[st.sort]-b[st.sort]));
+    const max = Math.max(...lojas.map(l=>l.v)) || 1;
+    document.getElementById('tLojas').innerHTML = lojas.map(l => `
+      <tr class="${st.loja===l.id?'sel':''}" data-id="${l.id}" tabindex="0">
+        <td>${l.nome}</td>
+        <td class="num">${brl(l.v,true)}</td>
+        <td class="barcell"><div class="bar" style="width:${(l.v/max*100).toFixed(1)}%"></div></td>
+        <td class="num ${l.var<0?'down':'up'}"><span aria-label="${l.var<0?t.down:t.up}">${l.var<0?'▼':'▲'}</span> ${pct(l.var)}</td>
+      </tr>`).join('');
+    document.querySelectorAll('#tLojas tr').forEach(tr => {
+      const pick = () => { const id = +tr.dataset.id; st.loja = (st.loja===id) ? 0 : id; fLoja.value = st.loja; render(); };
+      tr.onclick = pick; tr.onkeydown = e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); pick(); } };
+    });
+  }
+
+  applyLang();
+  render();
+})();
+</script>
+</body>
+</html>

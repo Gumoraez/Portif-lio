@@ -3,7 +3,7 @@
 Portfólio de Dados & BI com projetos usando dados fictícios.
 
 ## Projetos
-- [Vendas de Varejo](projetos/vendas-varejo) — Power BI + DAX
+- [Vendas de Varejo](projetos/vendas-varejo) — Power BI + DAX · [dashboard interativo (PT/EN)](https://gumoraez.github.io/Portif-lio/dashboard-vendas/)
 - [Churn de Assinaturas](projetos/churn-assinaturas) — SQL (PostgreSQL)
 - [People Analytics: Turnover](projetos/people-analytics-turnover) — Power BI + Power Query
 
